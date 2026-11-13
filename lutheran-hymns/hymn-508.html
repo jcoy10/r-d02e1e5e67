@@ -173,6 +173,53 @@ button.on {
   font-style: italic;
   line-height: 1.45;
 }
+
+.hymn-text {
+  margin-top: 2.4rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--rule);
+}
+.hymn-text h2 {
+  margin: 0 0 1.4rem;
+  font-family: var(--display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--red-deep);
+  text-align: center;
+}
+.stanza {
+  margin: 0 auto 1.55rem;
+  max-width: 28rem;
+}
+.stanza .sn {
+  display: block;
+  margin: 0 0 0.35rem;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--red);
+  text-align: center;
+  font-variant-numeric: lining-nums;
+}
+.stanza p {
+  margin: 0;
+  font-size: 1.14rem;
+  line-height: 1.5;
+  text-align: center;
+  text-wrap: pretty;
+}
+.text-note {
+  margin: 1.4rem 0 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.hymn-text + .scripture { margin-top: 1.6rem; }
 @media (min-width: 720px) {
   body { padding: 2.25rem 1.25rem; }
   .sheet {
@@ -204,6 +251,79 @@ button.on {
     <div class="row" id="sp"></div>
     <div class="row"><button id="lp" aria-pressed="false">Loop: off</button></div>
     <p id="info"></p>
+    <section class="hymn-text" aria-labelledby="text-heading">
+<h2 id="text-heading">Text</h2>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 1">1</span>
+<p>The day is surely drawing near<br>
+When Jesus, God’s anointed,<br>
+In all His power shall appear<br>
+As judge whom God appointed.<br>
+Then fright shall banish idle mirth,<br>
+And flames on flames shall ravage earth<br>
+As Scripture long has warned us.</p>
+</article>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 2">2</span>
+<p>The final trumpet then shall sound<br>
+And all the earth be shaken,<br>
+And all who rest beneath the ground<br>
+Shall from their sleep awaken.<br>
+But all who live will in that hour,<br>
+By God’s almighty, boundless pow’r,<br>
+Be changed at His commanding.</p>
+</article>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 3">3</span>
+<p>The books are opened then to all,<br>
+A record truly telling<br>
+What each has done, both great and small,<br>
+When he on earth was dwelling,<br>
+And ev’ry heart be clearly seen,<br>
+And all be known as they have been<br>
+In thoughts and words and actions.</p>
+</article>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 4">4</span>
+<p>Then woe to those who scorned the Lord<br>
+And sought but carnal pleasures,<br>
+Who here despised His precious Word<br>
+And loved their earthly treasures!<br>
+With shame and trembling they will stand<br>
+And at the judge’s stern command<br>
+To Satan be delivered.</p>
+</article>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 5">5</span>
+<p>My Savior paid the debt I owe<br>
+And for my sin was smitten;<br>
+Within the Book of Life I know<br>
+My name has now been written.<br>
+I will not doubt, for I am free,<br>
+And Satan cannot threaten me;<br>
+There is no condemnation!</p>
+</article>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 6">6</span>
+<p>May Christ our intercessor be<br>
+And through His blood and merit<br>
+Read from His book that we are free<br>
+With all who life inherit.<br>
+Then we shall see Him face to face,<br>
+With all His saints in that blest place<br>
+Which He has purchased for us.</p>
+</article>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 7">7</span>
+<p>O Jesus Christ, do not delay,<br>
+But hasten our salvation;<br>
+We often tremble on our way<br>
+In fear and tribulation.<br>
+O hear and grant our fervent plea;<br>
+Come, mighty judge, and make us free<br>
+From death and ev’ry evil.</p>
+</article>
+</section>
     <section class="scripture" aria-labelledby="scripture-heading">
 <h2 id="scripture-heading">Scripture</h2>
 <article class="passage">
