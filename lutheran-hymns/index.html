@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
   Adding a hymn:
-  1. Drop LSB<N>_player.html into this lsb-hymns/ folder. Do not edit the player.
+  1. Drop hymn-<N>.html into this lutheran-hymns/ folder. Do not edit the player.
   2. Add one line to the HYMNS array in the script below.
 -->
 <html lang="en">
@@ -11,8 +11,8 @@
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#7b1e2b">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="LSB Hymns">
-  <title>LSB Hymns</title>
+  <meta name="apple-mobile-web-app-title" content="Lutheran Hymns">
+  <title>Lutheran Hymns</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f3eadb'/%3E%3Cpath fill='%237b1e2b' d='M14 3h4v26h-4zM5 11h22v4H5z'/%3E%3C/svg%3E">
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%23f3eadb'/%3E%3Cpath fill='%237b1e2b' d='M78 22h24v136H78zM28 64h124v24H28z'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,24 +21,25 @@
   <script>
     /*
       Adding a hymn:
-      1. Drop LSB<N>_player.html into this lsb-hymns/ folder. Do not edit the player.
+      1. Drop hymn-<N>.html into this lutheran-hymns/ folder. Do not edit the player.
       2. Add one line to the HYMNS array below.
 
-      Take title and tune from the player's <title> or <h1>:
-        LSB 621 · Let All Mortal Flesh Keep Silence (PICARDY)
-      line   — first line, only when it is different from the title (optional)
-      section — LSB section name (optional). Leave "" on every hymn for one list.
+      Take title from the player's heading:
+        Hymn 621
+        Let All Mortal Flesh Keep Silence
+      line    — first line, only when it is different from the title (optional)
+      section — section name (optional). Leave "" on every hymn for one list.
       Leave any field you do not have blank. Do not invent titles.
-      The page sorts by LSB number. Search matches number, title, tune, and line.
+      The page sorts by hymn number. Search matches number and title.
     */
     const HYMNS = [
-      { number: 508, title: "The Day Is Surely Drawing Near", tune: "ES IST GEWISSLICH", file: "LSB508_player.html", section: "" },
-      { number: 559, title: "Oh, How Great Is Your Compassion", tune: "ACH, WAS SOLL ICH SÜNDER MACHEN", file: "LSB559_player.html", section: "" },
-      { number: 621, title: "Let All Mortal Flesh Keep Silence", tune: "PICARDY", file: "LSB621_player.html", section: "" },
-      { number: 627, title: "Jesus Christ, Our Blessed Savior", tune: "JESUS CHRISTUS, UNSER HEILAND", file: "LSB627_player.html", section: "" },
-      { number: 666, title: "O Little Flock, Fear Not the Foe", tune: "KOMMT HER ZU MIR", file: "LSB666_player.html", section: "" },
-      { number: 668, title: "Rise! To Arms! With Prayer Employ You", tune: "WACHET AUF", file: "LSB668_player.html", section: "" },
-      { number: 905, title: "Come, Thou Almighty King", tune: "ITALIAN HYMN", file: "LSB905_player.html", section: "" },
+      { number: 508, title: "The Day Is Surely Drawing Near", file: "hymn-508.html", section: "" },
+      { number: 559, title: "Oh, How Great Is Your Compassion", file: "hymn-559.html", section: "" },
+      { number: 621, title: "Let All Mortal Flesh Keep Silence", file: "hymn-621.html", section: "" },
+      { number: 627, title: "Jesus Christ, Our Blessed Savior", file: "hymn-627.html", section: "" },
+      { number: 666, title: "O Little Flock, Fear Not the Foe", file: "hymn-666.html", section: "" },
+      { number: 668, title: "Rise! To Arms! With Prayer Employ You", file: "hymn-668.html", section: "" },
+      { number: 905, title: "Come, Thou Almighty King", file: "hymn-905.html", section: "" },
     ];
   </script>
   <style>
@@ -47,7 +48,6 @@
       --ink: #1c140f;
       --red: #7b1e2b;
       --red-deep: #5c1420;
-      --tune: #5c463a;
       --muted: #6d5b4e;
       --rule: rgba(123, 30, 43, 0.85);
       --hairline: rgba(70, 44, 28, 0.16);
@@ -95,18 +95,8 @@
       color: var(--red);
     }
 
-    .kicker {
-      margin: 0;
-      font-family: var(--display);
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--red-deep);
-    }
-
     h1 {
-      margin: 0.35rem 0 0;
+      margin: 0;
       font-family: var(--display);
       font-weight: 600;
       font-size: clamp(2.6rem, 10vw, 3.6rem);
@@ -221,7 +211,7 @@
 
     .hymn {
       display: grid;
-      grid-template-columns: 4.15rem minmax(0, 1fr) 0.9rem;
+      grid-template-columns: 5.15rem minmax(0, 1fr) 0.9rem;
       column-gap: 0.75rem;
       align-items: center;
       min-height: 4.6rem;
@@ -244,13 +234,29 @@
     }
 
     .num {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: var(--red);
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+
+    .num-label {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 0.22rem;
+    }
+
+    .num-digits {
       font-family: var(--display);
       font-weight: 600;
       font-size: 2.05rem;
       line-height: 1;
       letter-spacing: 0.02em;
-      color: var(--red);
-      font-variant-numeric: lining-nums tabular-nums;
     }
 
     .text { min-width: 0; }
@@ -270,19 +276,6 @@
       font-size: 1.05rem;
       line-height: 1.3;
       color: #3a2c24;
-    }
-
-    .tune {
-      display: block;
-      margin-top: 0.28rem;
-      font-family: var(--display);
-      font-weight: 600;
-      font-size: 0.84rem;
-      letter-spacing: 0.11em;
-      line-height: 1.35;
-      text-transform: uppercase;
-      color: var(--tune);
-      overflow-wrap: break-word;
     }
 
     .go {
@@ -330,8 +323,7 @@
       <svg class="cross" viewBox="0 0 48 68" aria-hidden="true">
         <path d="M24 2v64M6 20h36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"/>
       </svg>
-      <p class="kicker">Lutheran Service Book</p>
-      <h1>LSB Hymns</h1>
+      <h1>Lutheran Hymns</h1>
       <div class="rules" aria-hidden="true"><span></span><span></span></div>
     </header>
 
@@ -375,7 +367,7 @@
         });
         if (!anySection) return [{ name: "", hymns: sorted }];
 
-        // Headings follow LSB-number order. A section stays together
+        // Headings follow hymn-number order. A section stays together
         // when its hymns are contiguous; a blank section has no heading.
         var groups = [];
         sorted.forEach(function (h) {
@@ -389,7 +381,7 @@
 
       function matches(hymn, query) {
         if (!query) return true;
-        var blob = [hymn.number, hymn.title, hymn.tune, hymn.line].map(fold).join(" ");
+        var blob = ["hymn " + hymn.number, hymn.number, hymn.title, hymn.line].map(fold).join(" ");
         return blob.indexOf(query) !== -1;
       }
 
@@ -405,16 +397,23 @@
         var link = document.createElement("a");
         link.className = "hymn";
         link.href = hymn.file || "#";
+        link.setAttribute("aria-label", "Hymn " + hymn.number + ", " + (hymn.title || ""));
 
         var num = document.createElement("span");
         num.className = "num";
-        num.textContent = hymn.number;
+        var lab = document.createElement("span");
+        lab.className = "num-label";
+        lab.textContent = "Hymn";
+        var dig = document.createElement("span");
+        dig.className = "num-digits";
+        dig.textContent = hymn.number;
+        num.appendChild(lab);
+        num.appendChild(dig);
 
         var text = document.createElement("span");
         text.className = "text";
         addSpan(text, "title", hymn.title || "");
         addSpan(text, "line", String(hymn.line || "").trim());
-        addSpan(text, "tune", String(hymn.tune || "").trim());
 
         var go = document.createElement("span");
         go.className = "go";
