@@ -173,6 +173,53 @@ button.on {
   font-style: italic;
   line-height: 1.45;
 }
+
+.hymn-text {
+  margin-top: 2.4rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--rule);
+}
+.hymn-text h2 {
+  margin: 0 0 1.4rem;
+  font-family: var(--display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--red-deep);
+  text-align: center;
+}
+.stanza {
+  margin: 0 auto 1.55rem;
+  max-width: 28rem;
+}
+.stanza .sn {
+  display: block;
+  margin: 0 0 0.35rem;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--red);
+  text-align: center;
+  font-variant-numeric: lining-nums;
+}
+.stanza p {
+  margin: 0;
+  font-size: 1.14rem;
+  line-height: 1.5;
+  text-align: center;
+  text-wrap: pretty;
+}
+.text-note {
+  margin: 1.4rem 0 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.hymn-text + .scripture { margin-top: 1.6rem; }
 @media (min-width: 720px) {
   body { padding: 2.25rem 1.25rem; }
   .sheet {
@@ -204,6 +251,45 @@ button.on {
     <div class="row" id="sp"></div>
     <div class="row"><button id="lp" aria-pressed="false">Loop: off</button></div>
     <p id="info"></p>
+    <section class="hymn-text" aria-labelledby="text-heading">
+<h2 id="text-heading">Text</h2>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 1">1</span>
+<p>Let all mortal flesh keep silence<br>
+And with fear and trembling stand;<br>
+Ponder nothing earthly minded,<br>
+For with blessing in His hand<br>
+Christ our God to earth descending<br>
+Comes our homage to demand.</p>
+</article>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 2">2</span>
+<p>King of kings yet born of Mary,<br>
+As of old on earth He stood,<br>
+Lord of lords, in human vesture,<br>
+In the body and the blood,<br>
+He will give to all the faithful<br>
+His own self for heav’nly food.</p>
+</article>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 3">3</span>
+<p>Rank on rank the host of heaven<br>
+Spreads its vanguard on the way<br>
+As the Light of Light descending<br>
+From the realms of endless day,<br>
+Comes the pow’rs of hell to vanquish<br>
+As the darkness clears away.</p>
+</article>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 4">4</span>
+<p>At His feet the six-winged seraph,<br>
+Cherubim with sleepless eye,<br>
+Veil their faces to the presence<br>
+As with ceaseless voice they cry:<br>
+“Alleluia, alleluia!<br>
+Alleluia, Lord Most High!”</p>
+</article>
+</section>
     <section class="scripture" aria-labelledby="scripture-heading">
 <h2 id="scripture-heading">Scripture</h2>
 <article class="passage">

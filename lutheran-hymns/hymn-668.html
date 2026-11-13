@@ -173,6 +173,53 @@ button.on {
   font-style: italic;
   line-height: 1.45;
 }
+
+.hymn-text {
+  margin-top: 2.4rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--rule);
+}
+.hymn-text h2 {
+  margin: 0 0 1.4rem;
+  font-family: var(--display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--red-deep);
+  text-align: center;
+}
+.stanza {
+  margin: 0 auto 1.55rem;
+  max-width: 28rem;
+}
+.stanza .sn {
+  display: block;
+  margin: 0 0 0.35rem;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--red);
+  text-align: center;
+  font-variant-numeric: lining-nums;
+}
+.stanza p {
+  margin: 0;
+  font-size: 1.14rem;
+  line-height: 1.5;
+  text-align: center;
+  text-wrap: pretty;
+}
+.text-note {
+  margin: 1.4rem 0 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.hymn-text + .scripture { margin-top: 1.6rem; }
 @media (min-width: 720px) {
   body { padding: 2.25rem 1.25rem; }
   .sheet {
@@ -204,6 +251,54 @@ button.on {
     <div class="row" id="sp"></div>
     <div class="row"><button id="lp" aria-pressed="false">Loop: off</button></div>
     <p id="info"></p>
+    <section class="hymn-text" aria-labelledby="text-heading">
+<h2 id="text-heading">Text</h2>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 1">1</span>
+<p>Rise! To arms! With prayer employ you,<br>
+O Christians, lest the foe destroy you;<br>
+For Satan has designed your fall.<br>
+Wield God’s Word, the weapon glorious;<br>
+Against all foes be thus victorious,<br>
+For God protects you from them all.<br>
+Fear not the hordes of hell,<br>
+Here is Emmanuel.<br>
+Hail the Savior!<br>
+The strong foes yield<br>
+To Christ, our shield,<br>
+And we, the victors, hold the field.</p>
+</article>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 2">2</span>
+<p>Cast afar this world’s vain pleasure<br>
+And boldly strive for heav’nly treasure.<br>
+Be steadfast in the Savior’s might.<br>
+Trust the Lord, who stands beside you,<br>
+For Jesus from all harm will hide you.<br>
+By faith you conquer in the fight.<br>
+Take courage, weary soul!<br>
+Look forward to the goal!<br>
+Joy awaits you.<br>
+The race well run,<br>
+Your long war won,<br>
+Your crown shines splendid as the sun.</p>
+</article>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 3">3</span>
+<p>Wisely fight, for time is fleeting;<br>
+The hours of grace are fast retreating;<br>
+Short, short is this our earthly way.<br>
+When the Lord the dead will waken<br>
+And sinners all by fear are shaken,<br>
+The saints with joy will greet that day.<br>
+Praise God, our triumph’s sure.<br>
+We need not long endure<br>
+Scorn and trial.<br>
+Our Savior King<br>
+His own will bring<br>
+To that great glory which we sing.</p>
+</article>
+</section>
     <section class="scripture" aria-labelledby="scripture-heading">
 <h2 id="scripture-heading">Scripture</h2>
 <article class="passage">

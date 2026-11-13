@@ -173,6 +173,53 @@ button.on {
   font-style: italic;
   line-height: 1.45;
 }
+
+.hymn-text {
+  margin-top: 2.4rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--rule);
+}
+.hymn-text h2 {
+  margin: 0 0 1.4rem;
+  font-family: var(--display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--red-deep);
+  text-align: center;
+}
+.stanza {
+  margin: 0 auto 1.55rem;
+  max-width: 28rem;
+}
+.stanza .sn {
+  display: block;
+  margin: 0 0 0.35rem;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--red);
+  text-align: center;
+  font-variant-numeric: lining-nums;
+}
+.stanza p {
+  margin: 0;
+  font-size: 1.14rem;
+  line-height: 1.5;
+  text-align: center;
+  text-wrap: pretty;
+}
+.text-note {
+  margin: 1.4rem 0 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.hymn-text + .scripture { margin-top: 1.6rem; }
 @media (min-width: 720px) {
   body { padding: 2.25rem 1.25rem; }
   .sheet {
@@ -204,6 +251,49 @@ button.on {
     <div class="row" id="sp"></div>
     <div class="row"><button id="lp" aria-pressed="false">Loop: off</button></div>
     <p id="info"></p>
+    <section class="hymn-text" aria-labelledby="text-heading">
+<h2 id="text-heading">Text</h2>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 1">1</span>
+<p>Come, Thou almighty King,<br>
+Help us Thy name to sing;<br>
+Help us to praise;<br>
+Father all-glorious,<br>
+O’er all victorious,<br>
+Come and reign over us,<br>
+Ancient of Days.</p>
+</article>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 2">2</span>
+<p>Come, Thou incarnate Word,<br>
+Gird on Thy mighty sword;<br>
+Our prayer attend.<br>
+Come and Thy people bless,<br>
+And give Thy Word success,<br>
+And let Thy righteousness<br>
+On us descend.</p>
+</article>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 3">3</span>
+<p>Come, holy Comforter,<br>
+Thy sacred witness bear<br>
+In this glad hour!<br>
+Thou, who almighty art,<br>
+Now rule in ev’ry heart,<br>
+And ne’er from us depart,<br>
+Spirit of pow’r.</p>
+</article>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 4">4</span>
+<p>To Thee, great One in Three,<br>
+Eternal praises be<br>
+Hence evermore!<br>
+Thy sov’reign majesty<br>
+May we in glory see,<br>
+And to eternity<br>
+Love and adore.</p>
+</article>
+</section>
     <section class="scripture" aria-labelledby="scripture-heading">
 <h2 id="scripture-heading">Scripture</h2>
 <article class="passage">
