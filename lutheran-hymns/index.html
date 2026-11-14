@@ -193,16 +193,24 @@
 
     .group + .group { margin-top: 1.75rem; }
 
+    .group {
+      --sc: var(--red);
+      border-left: 4px solid var(--sc);
+      padding-left: 0.75rem;
+    }
+
     .section {
-      margin: 0 0 0.35rem;
-      padding-bottom: 0.35rem;
-      border-bottom: 1px solid var(--red);
+      margin: 0 0 0.35rem -0.75rem;
+      padding: 0.5rem 0.75rem 0.45rem;
+      background: rgba(123, 30, 43, 0.08);
+      background: color-mix(in srgb, var(--sc) 11%, transparent);
+      border-bottom: 1px solid var(--sc);
       font-family: var(--display);
       font-size: 1.15rem;
       font-weight: 600;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--red-deep);
+      color: var(--sc);
     }
 
     .hymns {
@@ -233,21 +241,21 @@
     }
 
     .hymn:focus-visible {
-      outline: 2px solid var(--red);
+      outline: 2px solid var(--sc, var(--red));
       outline-offset: 2px;
     }
 
-    .hymn:active { background: rgba(123, 30, 43, 0.06); }
+    .hymn:active { background: color-mix(in srgb, var(--sc) 8%, transparent); }
 
     @media (hover: hover) {
-      .hymn:hover { background: rgba(123, 30, 43, 0.045); }
+      .hymn:hover { background: color-mix(in srgb, var(--sc) 6%, transparent); }
     }
 
     .num {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      color: var(--red);
+      color: var(--sc, var(--red));
       font-variant-numeric: lining-nums tabular-nums;
     }
 
@@ -291,7 +299,7 @@
     .go {
       justify-self: end;
       transition: transform 0.18s ease;
-      color: var(--red);
+      color: var(--sc, var(--red));
       font-family: var(--display);
       font-size: 1.7rem;
       line-height: 1;
@@ -315,9 +323,9 @@
       align-items: center;
       min-height: 2.75rem;
       padding: 0.45rem 1.15rem;
-      border: 1px solid var(--red);
+      border: 1px solid var(--sc, var(--red));
       border-radius: 999px;
-      color: var(--red);
+      color: var(--sc, var(--red));
       text-decoration: none;
       font-family: var(--display);
       font-weight: 600;
@@ -327,10 +335,10 @@
       -webkit-tap-highlight-color: rgba(123, 30, 43, 0.12);
     }
 
-    .inst:active, .inst:focus-visible { background: var(--red); color: var(--parchment); outline: none; }
+    .inst:active, .inst:focus-visible { background: var(--sc, var(--red)); color: var(--parchment); outline: none; }
 
     @media (hover: hover) {
-      .inst:hover { background: var(--red); color: var(--parchment); }
+      .inst:hover { background: var(--sc, var(--red)); color: var(--parchment); }
     }
 
     @media (max-width: 420px) {
@@ -394,6 +402,29 @@
   </div>
 
   <script>
+    // Each section's color follows the church's liturgical colors.
+    var SECTION_COLORS = {
+      "Advent": "#4b2a7a", "End Times": "#5b2a86", "Lent": "#5b2a86",
+      "Christmas": "#8a6a12", "Easter": "#8a6a12", "Holy Trinity": "#8a6a12",
+      "Epiphany": "#2f6b3a", "Pentecost": "#b2441b",
+      "Justification": "#a3172f", "Redeemer": "#a3172f",
+      "Word of God": "#24508a", "Baptism": "#24508a",
+      "Confession and Absolution": "#5b2a86",
+      "The Lord's Supper": "#6e1630",
+      "The Church Militant": "#b2441b", "The Church Triumphant": "#8a6a12",
+      "Sanctification": "#2f6b3a", "Trust": "#2f6b3a", "Christian Love": "#2f6b3a",
+      "Prayer": "#2f6b3a", "Stewardship": "#2f6b3a", "Hope and Comfort": "#2f6b3a",
+      "Praise and Adoration": "#9a5b0c",
+      "Beginning of Service": "#8a6a12", "Close of Service": "#8a6a12"
+    };
+    var FALLBACK_COLORS = ["#24508a", "#2f6b3a", "#5b2a86", "#9a5b0c", "#6e1630", "#b2441b"];
+    function sectionColor(name) {
+      if (SECTION_COLORS[name]) return SECTION_COLORS[name];
+      var h = 0;
+      for (var i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+      return FALLBACK_COLORS[h % FALLBACK_COLORS.length];
+    }
+
     (function () {
       var input = document.getElementById("q");
       var clearBtn = document.getElementById("clear");
@@ -530,6 +561,7 @@
             var section = document.createElement("section");
             section.className = "group";
             if (group.name) {
+              section.style.setProperty("--sc", sectionColor(group.name));
               var heading = document.createElement("h2");
               heading.className = "section";
               heading.textContent = group.name;
