@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <!--
   Adding a hymn:
-  1. Drop hymn-<N>.html into this lutheran-hymns/ folder. Do not edit the player.
-  2. Add one line to the HYMNS array in the script below.
+  1. Drop hymn-<N>.html (piano) or hymn-<N>-organ.html / hymn-<N>-guitar.html into this folder.
+  2. Add the hymn to the HYMNS array below, or add an instrument to its instruments list.
 -->
 <html lang="en">
 <head>
@@ -21,8 +21,10 @@
   <script>
     /*
       Adding a hymn:
-      1. Drop hymn-<N>.html into this lutheran-hymns/ folder. Do not edit the player.
-      2. Add one line to the HYMNS array below.
+      1. Drop the player into this folder: hymn-<N>.html for piano,
+         hymn-<N>-organ.html, hymn-<N>-guitar.html for other instruments.
+      2. Add the hymn to the HYMNS array below, or add a { name, file }
+         entry to an existing hymn's instruments list.
 
       Take title from the player's heading:
         Hymn 621
@@ -33,13 +35,13 @@
       The page sorts by hymn number. Search matches number and title.
     */
     const HYMNS = [
-      { number: 508, title: "The Day Is Surely Drawing Near", file: "hymn-508.html", section: "End Times" },
-      { number: 559, title: "Oh, How Great Is Your Compassion", file: "hymn-559.html", section: "Justification" },
-      { number: 621, title: "Let All Mortal Flesh Keep Silence", file: "hymn-621.html", section: "The Lord's Supper" },
-      { number: 627, title: "Jesus Christ, Our Blessed Savior", file: "hymn-627.html", section: "The Lord's Supper" },
-      { number: 666, title: "O Little Flock, Fear Not the Foe", file: "hymn-666.html", section: "The Church Militant" },
-      { number: 668, title: "Rise! To Arms! With Prayer Employ You", file: "hymn-668.html", section: "The Church Militant" },
-      { number: 905, title: "Come, Thou Almighty King", file: "hymn-905.html", section: "Beginning of Service" },
+      { number: 508, title: "The Day Is Surely Drawing Near", instruments: [{ name: "Piano", file: "hymn-508.html" }], section: "End Times" },
+      { number: 559, title: "Oh, How Great Is Your Compassion", instruments: [{ name: "Piano", file: "hymn-559.html" }], section: "Justification" },
+      { number: 621, title: "Let All Mortal Flesh Keep Silence", instruments: [{ name: "Piano", file: "hymn-621.html" }], section: "The Lord's Supper" },
+      { number: 627, title: "Jesus Christ, Our Blessed Savior", instruments: [{ name: "Piano", file: "hymn-627.html" }], section: "The Lord's Supper" },
+      { number: 666, title: "O Little Flock, Fear Not the Foe", instruments: [{ name: "Piano", file: "hymn-666.html" }], section: "The Church Militant" },
+      { number: 668, title: "Rise! To Arms! With Prayer Employ You", instruments: [{ name: "Piano", file: "hymn-668.html" }], section: "The Church Militant" },
+      { number: 905, title: "Come, Thou Almighty King", instruments: [{ name: "Piano", file: "hymn-905.html" }], section: "Beginning of Service" },
     ];
   </script>
   <style>
@@ -210,6 +212,14 @@
     }
 
     .hymn {
+      width: 100%;
+      margin: 0;
+      border: 0;
+      border-bottom: 1px solid var(--hairline);
+      background: transparent;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
       display: grid;
       grid-template-columns: 5.15rem minmax(0, 1fr) 0.9rem;
       column-gap: 0.75rem;
@@ -280,10 +290,51 @@
 
     .go {
       justify-self: end;
+      transition: transform 0.18s ease;
       color: var(--red);
       font-family: var(--display);
       font-size: 1.7rem;
       line-height: 1;
+    }
+
+    .hymn[aria-expanded="true"] .go { transform: rotate(90deg); }
+    .hymn[aria-expanded="true"] { border-bottom-color: transparent; }
+
+    .instruments {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      padding: 0.1rem 0.15rem 1.1rem 6.05rem;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .instruments[hidden] { display: none; }
+
+    .inst {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.75rem;
+      padding: 0.45rem 1.15rem;
+      border: 1px solid var(--red);
+      border-radius: 999px;
+      color: var(--red);
+      text-decoration: none;
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      -webkit-tap-highlight-color: rgba(123, 30, 43, 0.12);
+    }
+
+    .inst:active, .inst:focus-visible { background: var(--red); color: var(--parchment); outline: none; }
+
+    @media (hover: hover) {
+      .inst:hover { background: var(--red); color: var(--parchment); }
+    }
+
+    @media (max-width: 420px) {
+      .instruments { padding-left: 0.15rem; }
     }
 
     .empty {
@@ -338,7 +389,7 @@
     <div id="list"></div>
 
     <footer class="colophon">
-      <p>Piano accompaniments</p>
+      <p>Instrumental accompaniments</p>
     </footer>
   </div>
 
@@ -393,11 +444,23 @@
         parent.appendChild(span);
       }
 
-      function hymnLink(hymn) {
-        var link = document.createElement("a");
-        link.className = "hymn";
-        link.href = hymn.file || "#";
-        link.setAttribute("aria-label", "Hymn " + hymn.number + ", " + (hymn.title || ""));
+      var open = {};
+
+      function instrumentsOf(hymn) {
+        if (hymn.instruments && hymn.instruments.length) return hymn.instruments;
+        return hymn.file ? [{ name: "Piano", file: hymn.file }] : [];
+      }
+
+      function hymnItem(hymn) {
+        var item = document.createElement("li");
+        var panelId = "inst-" + hymn.number;
+
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "hymn";
+        btn.setAttribute("aria-controls", panelId);
+        btn.setAttribute("aria-expanded", open[hymn.number] ? "true" : "false");
+        btn.setAttribute("aria-label", "Hymn " + hymn.number + ", " + (hymn.title || "") + ". Show instruments");
 
         var num = document.createElement("span");
         num.className = "num";
@@ -420,10 +483,33 @@
         go.setAttribute("aria-hidden", "true");
         go.textContent = "\u203A";
 
-        link.appendChild(num);
-        link.appendChild(text);
-        link.appendChild(go);
-        return link;
+        btn.appendChild(num);
+        btn.appendChild(text);
+        btn.appendChild(go);
+
+        var panel = document.createElement("div");
+        panel.className = "instruments";
+        panel.id = panelId;
+        panel.hidden = !open[hymn.number];
+        instrumentsOf(hymn).forEach(function (inst) {
+          var a = document.createElement("a");
+          a.className = "inst";
+          a.href = inst.file;
+          a.textContent = inst.name;
+          a.setAttribute("aria-label", "Hymn " + hymn.number + ", " + inst.name);
+          panel.appendChild(a);
+        });
+
+        btn.addEventListener("click", function () {
+          var isOpen = btn.getAttribute("aria-expanded") === "true";
+          btn.setAttribute("aria-expanded", isOpen ? "false" : "true");
+          panel.hidden = isOpen;
+          if (isOpen) delete open[hymn.number]; else open[hymn.number] = true;
+        });
+
+        item.appendChild(btn);
+        item.appendChild(panel);
+        return item;
       }
 
       function render() {
@@ -452,9 +538,7 @@
             var ul = document.createElement("ul");
             ul.className = "hymns";
             group.hymns.forEach(function (hymn) {
-              var item = document.createElement("li");
-              item.appendChild(hymnLink(hymn));
-              ul.appendChild(item);
+              ul.appendChild(hymnItem(hymn));
             });
             section.appendChild(ul);
             list.appendChild(section);
