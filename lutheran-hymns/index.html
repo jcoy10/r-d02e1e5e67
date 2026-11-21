@@ -35,7 +35,7 @@
                 Pfarrbrief, oldest first: [{date:"YYYY-MM-DD", name:"..."}].
                 Use [] when there are no dates to show (Hymn 621 for now).
       Leave any field you do not have blank. Do not invent titles.
-      The page sorts by hymn number. Search matches number and title.
+      The page sorts by hymn number. Search matches number, title, section, and church days (sungOn names).
     */
     const HYMNS = [
       { number: 508, title: "The Day Is Surely Drawing Near", instruments: [{ name: "Piano", file: "hymn-508.html" }], section: "End Times", sungOn: [{date:"2026-11-15", name:"Twenty-sixth Sunday after Trinity"}]},
@@ -335,6 +335,15 @@
       color: var(--muted);
     }
 
+    .day-match {
+      display: block;
+      margin-top: 0.18rem;
+      font-style: italic;
+      font-size: 0.92rem;
+      line-height: 1.25;
+      color: var(--muted);
+    }
+
     .sung {
       flex-basis: 100%;
       margin: 0.1rem 0 0;
@@ -513,7 +522,7 @@
     <form id="find" class="find" role="search">
       <label for="q">Search</label>
       <div class="search-row">
-        <input id="q" type="search" placeholder="Number, title, or section" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+        <input id="q" type="search" placeholder="Number, title, section, or church day" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
         <button type="button" id="clear" hidden>Clear</button>
       </div>
       <div class="filters">
@@ -614,10 +623,49 @@
         return groups;
       }
 
-      function matches(hymn, query) {
+      var ORDINAL_WORDS = [
+        ["twenty first", 21], ["twenty second", 22], ["twenty third", 23],
+        ["twenty fourth", 24], ["twenty fifth", 25], ["twenty sixth", 26],
+        ["twenty seventh", 27], ["twenty eighth", 28], ["twenty ninth", 29],
+        ["thirty first", 31],
+        ["thirtieth", 30], ["twentieth", 20], ["nineteenth", 19],
+        ["eighteenth", 18], ["seventeenth", 17], ["sixteenth", 16],
+        ["fifteenth", 15], ["fourteenth", 14], ["thirteenth", 13],
+        ["twelfth", 12], ["eleventh", 11], ["tenth", 10],
+        ["ninth", 9], ["eighth", 8], ["seventh", 7], ["sixth", 6],
+        ["fifth", 5], ["fourth", 4], ["third", 3], ["second", 2], ["first", 1]
+      ];
+
+      function churchNorm(value) {
+        var s = fold(value);
+        s = s.replace(/[\u2010-\u2015\u2212\-]/g, " ");
+        s = s.replace(/[.,;:'"!?()/]/g, " ");
+        s = s.replace(/\s+/g, " ").trim();
+        s = s.replace(/\bst\b/g, "saint");
+        s = s.replace(/\b(\d+)(?:st|nd|rd|th)\b/g, "$1");
+        ORDINAL_WORDS.forEach(function (pair) {
+          s = s.replace(new RegExp("\\b" + pair[0] + "\\b", "g"), String(pair[1]));
+        });
+        return s.replace(/\s+/g, " ").trim();
+      }
+
+      function basicBlob(hymn) {
+        return ["hymn " + hymn.number, hymn.number, hymn.title, hymn.line, hymn.section].map(fold).join(" ");
+      }
+
+      function matchingDays(hymn, rawQuery) {
+        var q = churchNorm(rawQuery);
+        if (!q) return [];
+        return sungOf(hymn).filter(function (entry) {
+          return churchNorm(entry.name || "").indexOf(q) !== -1;
+        });
+      }
+
+      function matches(hymn, rawQuery) {
+        var query = fold(String(rawQuery || "").trim());
         if (!query) return true;
-        var blob = ["hymn " + hymn.number, hymn.number, hymn.title, hymn.line, hymn.section].map(fold).join(" ");
-        return blob.indexOf(query) !== -1;
+        if (basicBlob(hymn).indexOf(query) !== -1) return true;
+        return matchingDays(hymn, rawQuery).length > 0;
       }
 
       function addSpan(parent, className, text) {
@@ -660,6 +708,7 @@
       }
 
       var favOnly = false;
+      var searchQuery = "";
       var secSel = document.getElementById("sec");
       var favBtn = document.getElementById("favonly");
 
@@ -710,7 +759,14 @@
         text.className = "text";
         addSpan(text, "title", hymn.title || "");
         addSpan(text, "line", String(hymn.line || "").trim());
-        addSpan(text, "last-sung", lastSungLabel(hymn));
+        var dayHits = searchQuery ? matchingDays(hymn, searchQuery) : [];
+        if (dayHits.length) {
+          dayHits.forEach(function (entry) {
+            addSpan(text, "day-match", "Sung on " + (entry.name || ""));
+          });
+        } else {
+          addSpan(text, "last-sung", lastSungLabel(hymn));
+        }
 
         var slot = document.createElement("span");
         slot.setAttribute("aria-hidden", "true");
@@ -785,14 +841,14 @@
       }
 
       function render() {
-        var query = fold(input.value.trim());
+        searchQuery = input.value.trim();
         var wantSec = secSel.value;
         secSel.classList.toggle("on", !!wantSec);
         favBtn.setAttribute("aria-pressed", favOnly ? "true" : "false");
         var filtered = HYMNS.filter(function (hymn) {
           if (favOnly && !isFav(hymn.number)) return false;
           if (wantSec && String(hymn.section || "").trim() !== wantSec) return false;
-          return matches(hymn, query);
+          return matches(hymn, searchQuery);
         });
         var groups = groupsOf(filtered);
 
