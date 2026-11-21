@@ -36,9 +36,13 @@
     */
     const HYMNS = [
       { number: 508, title: "The Day Is Surely Drawing Near", instruments: [{ name: "Piano", file: "hymn-508.html" }], section: "End Times" },
+      { number: 515, title: "Rejoice, Rejoice, Believers", instruments: [{ name: "Guitar", file: "hymn-515.html" }], section: "End Times" },
+      { number: 516, title: "Wake, Awake, for Night Is Flying", instruments: [{ name: "Organ", file: "hymn-516.html" }], section: "End Times" },
       { number: 559, title: "Oh, How Great Is Your Compassion", instruments: [{ name: "Piano", file: "hymn-559.html" }], section: "Justification" },
       { number: 621, title: "Let All Mortal Flesh Keep Silence", instruments: [{ name: "Piano", file: "hymn-621.html" }], section: "The Lord's Supper" },
       { number: 627, title: "Jesus Christ, Our Blessed Savior", instruments: [{ name: "Piano", file: "hymn-627.html" }], section: "The Lord's Supper" },
+      { number: 636, title: "Soul, Adorn Yourself with Gladness", instruments: [{ name: "Piano", file: "hymn-636.html" }], section: "The Lord's Supper" },
+      { number: 663, title: "Rise, My Soul, to Watch and Pray", instruments: [{ name: "Piano", file: "hymn-663.html" }], section: "The Church Militant" },
       { number: 666, title: "O Little Flock, Fear Not the Foe", instruments: [{ name: "Piano", file: "hymn-666.html" }], section: "The Church Militant" },
       { number: 668, title: "Rise! To Arms! With Prayer Employ You", instruments: [{ name: "Piano", file: "hymn-668.html" }], section: "The Church Militant" },
       { number: 708, title: "Lord, Thee I Love with All My Heart", instruments: [{ name: "Piano", file: "hymn-708.html" }], section: "Trust" },
@@ -230,7 +234,7 @@
       text-align: left;
       cursor: pointer;
       display: grid;
-      grid-template-columns: 5.15rem minmax(0, 1fr) 0.9rem;
+      grid-template-columns: 5.15rem minmax(0, 1fr) 2.6rem 0.9rem;
       column-gap: 0.75rem;
       align-items: center;
       min-height: 4.6rem;
@@ -346,6 +350,88 @@
       .instruments { padding-left: 0.15rem; }
     }
 
+    /* ---- favorites ribbon, filters ---- */
+    .row-wrap { position: relative; }
+
+    .fav {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 1.8rem;
+      width: 2.75rem;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--sc, var(--red));
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .fav svg {
+      width: 1.2rem;
+      height: 1.75rem;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.7;
+      stroke-linejoin: round;
+      transition: transform 0.15s ease;
+    }
+
+    .fav[aria-pressed="true"] svg { fill: currentColor; }
+    .fav:active svg { transform: scale(0.9); }
+    .fav:focus-visible { outline: 2px solid var(--sc, var(--red)); outline-offset: -4px; border-radius: 6px; }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin: 1rem 0 0;
+    }
+
+    .chip, .filters select {
+      -webkit-appearance: none;
+      appearance: none;
+      min-height: 2.75rem;
+      margin: 0;
+      padding: 0.45rem 1.05rem;
+      border: 1px solid var(--red);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--red);
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      line-height: 1.2;
+      cursor: pointer;
+      -webkit-tap-highlight-color: rgba(123, 30, 43, 0.12);
+    }
+
+    .chip { display: inline-flex; align-items: center; gap: 0.5rem; }
+    .chip svg { width: 0.85rem; height: 1.2rem; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linejoin: round; }
+    .chip[aria-pressed="true"] { background: var(--red); color: var(--parchment); }
+    .chip[aria-pressed="true"] svg { fill: currentColor; }
+    .chip:focus-visible, .filters select:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+    .filters select {
+      flex: 1 1 11rem;
+      min-width: 0;
+      padding-right: 2.4rem;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%237b1e2b' stroke-width='1.8' d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 0.75rem;
+      text-overflow: ellipsis;
+    }
+
+    .filters select.on { background-color: var(--red); color: var(--parchment); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%23f3eadb' stroke-width='1.8' d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E"); }
+    .filters option { color: var(--ink); background: #fbf6ec; text-transform: none; letter-spacing: 0; }
+
     .empty {
       margin: 1.5rem 0 0;
       font-style: italic;
@@ -390,8 +476,15 @@
     <form id="find" class="find" role="search">
       <label for="q">Search</label>
       <div class="search-row">
-        <input id="q" type="search" placeholder="Number or title" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+        <input id="q" type="search" placeholder="Number, title, or section" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
         <button type="button" id="clear" hidden>Clear</button>
+      </div>
+      <div class="filters">
+        <button type="button" id="favonly" class="chip" aria-pressed="false">
+          <svg viewBox="0 0 20 28" aria-hidden="true"><path d="M3 1.5h14v24.5l-7-5.6-7 5.6z"/></svg>
+          Favorites
+        </button>
+        <select id="sec" aria-label="Filter by section"><option value="">All sections</option></select>
       </div>
     </form>
     <p id="count" class="count" aria-live="polite"></p>
@@ -464,7 +557,7 @@
 
       function matches(hymn, query) {
         if (!query) return true;
-        var blob = ["hymn " + hymn.number, hymn.number, hymn.title, hymn.line].map(fold).join(" ");
+        var blob = ["hymn " + hymn.number, hymn.number, hymn.title, hymn.line, hymn.section].map(fold).join(" ");
         return blob.indexOf(query) !== -1;
       }
 
@@ -478,6 +571,52 @@
 
       var open = {};
 
+      // ---- favorites (saved in this browser; start with 666, 668, 905, 621) ----
+      var FAV_KEY = "lutheranHymns.favorites";
+      var DEFAULT_FAVS = [666, 668, 905, 621];
+      var favs = loadFavs();
+
+      function loadFavs() {
+        try {
+          var raw = window.localStorage.getItem(FAV_KEY);
+          if (raw !== null) {
+            var parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) return parsed.map(Number).filter(function (n) { return n === n; });
+          }
+        } catch (e) { /* storage unavailable: fall through to the defaults */ }
+        return DEFAULT_FAVS.slice();
+      }
+
+      function saveFavs() {
+        try { window.localStorage.setItem(FAV_KEY, JSON.stringify(favs)); } catch (e) { /* keep in memory */ }
+      }
+
+      function isFav(n) { return favs.indexOf(Number(n)) !== -1; }
+
+      function toggleFav(n) {
+        n = Number(n);
+        var i = favs.indexOf(n);
+        if (i === -1) favs.push(n); else favs.splice(i, 1);
+        saveFavs();
+      }
+
+      var favOnly = false;
+      var secSel = document.getElementById("sec");
+      var favBtn = document.getElementById("favonly");
+
+      (function fillSections() {
+        var seen = {};
+        HYMNS.slice().sort(byNumber).forEach(function (h) {
+          var name = String(h.section || "").trim();
+          if (!name || seen[name]) return;
+          seen[name] = true;
+          var o = document.createElement("option");
+          o.value = name;
+          o.textContent = name;
+          secSel.appendChild(o);
+        });
+      })();
+
       function instrumentsOf(hymn) {
         if (hymn.instruments && hymn.instruments.length) return hymn.instruments;
         return hymn.file ? [{ name: "Piano", file: hymn.file }] : [];
@@ -486,6 +625,9 @@
       function hymnItem(hymn) {
         var item = document.createElement("li");
         var panelId = "inst-" + hymn.number;
+
+        var wrap = document.createElement("div");
+        wrap.className = "row-wrap";
 
         var btn = document.createElement("button");
         btn.type = "button";
@@ -510,6 +652,9 @@
         addSpan(text, "title", hymn.title || "");
         addSpan(text, "line", String(hymn.line || "").trim());
 
+        var slot = document.createElement("span");
+        slot.setAttribute("aria-hidden", "true");
+
         var go = document.createElement("span");
         go.className = "go";
         go.setAttribute("aria-hidden", "true");
@@ -517,7 +662,24 @@
 
         btn.appendChild(num);
         btn.appendChild(text);
+        btn.appendChild(slot);
         btn.appendChild(go);
+
+        var fav = document.createElement("button");
+        fav.type = "button";
+        fav.className = "fav";
+        fav.innerHTML = '<svg viewBox="0 0 20 28" aria-hidden="true"><path d="M3 1.5h14v24.5l-7-5.6-7 5.6z"/></svg>';
+        function paintFav() {
+          var on = isFav(hymn.number);
+          fav.setAttribute("aria-pressed", on ? "true" : "false");
+          fav.setAttribute("aria-label", (on ? "Remove Hymn " : "Add Hymn ") + hymn.number + (on ? " from favorites" : " to favorites"));
+          fav.title = on ? "Favorite" : "Mark as favorite";
+        }
+        paintFav();
+        fav.addEventListener("click", function () {
+          toggleFav(hymn.number);
+          if (favOnly) render(); else paintFav();
+        });
 
         var panel = document.createElement("div");
         panel.className = "instruments";
@@ -539,14 +701,23 @@
           if (isOpen) delete open[hymn.number]; else open[hymn.number] = true;
         });
 
-        item.appendChild(btn);
+        wrap.appendChild(btn);
+        wrap.appendChild(fav);
+        item.appendChild(wrap);
         item.appendChild(panel);
         return item;
       }
 
       function render() {
         var query = fold(input.value.trim());
-        var filtered = HYMNS.filter(function (hymn) { return matches(hymn, query); });
+        var wantSec = secSel.value;
+        secSel.classList.toggle("on", !!wantSec);
+        favBtn.setAttribute("aria-pressed", favOnly ? "true" : "false");
+        var filtered = HYMNS.filter(function (hymn) {
+          if (favOnly && !isFav(hymn.number)) return false;
+          if (wantSec && String(hymn.section || "").trim() !== wantSec) return false;
+          return matches(hymn, query);
+        });
         var groups = groupsOf(filtered);
 
         list.textContent = "";
@@ -555,7 +726,9 @@
         if (!filtered.length) {
           var empty = document.createElement("p");
           empty.className = "empty";
-          empty.textContent = "No hymns match that search.";
+          empty.textContent = favOnly && !favs.length
+            ? "No favorites yet. Tap the ribbon on a hymn to add it."
+            : "No hymns match that search.";
           list.appendChild(empty);
         } else {
           groups.forEach(function (group) {
@@ -583,6 +756,11 @@
       }
 
       input.addEventListener("input", render);
+      secSel.addEventListener("change", render);
+      favBtn.addEventListener("click", function () {
+        favOnly = !favOnly;
+        render();
+      });
       clearBtn.addEventListener("click", function () {
         input.value = "";
         render();
