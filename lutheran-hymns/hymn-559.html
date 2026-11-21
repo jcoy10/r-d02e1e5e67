@@ -241,6 +241,31 @@ button.on {
   text-transform: uppercase;
   color: var(--red);
 }
+
+.sung-on {
+  margin: 1.05rem 0 0;
+  text-align: center;
+}
+.sung-on h2 {
+  margin: 0 0 0.4rem;
+  font-family: var(--display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--red-deep);
+}
+.sung-on ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sung-on li {
+  margin: 0.22rem 0 0;
+  font-size: 1.02rem;
+  line-height: 1.35;
+}
+.sung-on time { font-variant-numeric: lining-nums; }
   </style>
 </head>
 <body>
@@ -254,6 +279,12 @@ button.on {
       <h1>Hymn 559</h1>
       <p class="hymn-title">Oh, How Great Is Your Compassion</p>
       <p class="hymn-section" style="color:#a3172f">Justification</p>
+      <section class="sung-on" aria-labelledby="sung-heading">
+        <h2 id="sung-heading">Sung on</h2>
+        <ul>
+        <li><time datetime="2026-11-15">Sun, Nov 15, 2026</time> · Twenty-sixth Sunday after Trinity</li>
+        </ul>
+      </section>
       <div class="rules" aria-hidden="true"><span></span><span></span></div>
     </header>
     <audio id="a" controls preload="auto"></audio>

@@ -241,6 +241,31 @@ button.on {
   text-transform: uppercase;
   color: var(--red);
 }
+
+.sung-on {
+  margin: 1.05rem 0 0;
+  text-align: center;
+}
+.sung-on h2 {
+  margin: 0 0 0.4rem;
+  font-family: var(--display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--red-deep);
+}
+.sung-on ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sung-on li {
+  margin: 0.22rem 0 0;
+  font-size: 1.02rem;
+  line-height: 1.35;
+}
+.sung-on time { font-variant-numeric: lining-nums; }
   </style>
 </head>
 <body>
@@ -254,6 +279,12 @@ button.on {
       <h1>Hymn 515</h1>
       <p class="hymn-title">Rejoice, Rejoice, Believers</p>
       <p class="hymn-section" style="color:#5b2a86">End Times</p>
+      <section class="sung-on" aria-labelledby="sung-heading">
+        <h2 id="sung-heading">Sung on</h2>
+        <ul>
+        <li><time datetime="2026-11-22">Sun, Nov 22, 2026</time> · Last Sunday of the Church Year</li>
+        </ul>
+      </section>
       <div class="rules" aria-hidden="true"><span></span><span></span></div>
     </header>
     <audio id="a" controls preload="auto"></audio>
