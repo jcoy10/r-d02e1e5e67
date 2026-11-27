@@ -48,7 +48,7 @@
       { number: 559, title: "Oh, How Great Is Your Compassion", instruments: [{ name: "Piano", file: "hymn-559.html" }], section: "Justification", sungOn: [{date:"2026-11-15", name:"Twenty-sixth Sunday after Trinity"}]},
       { number: 621, title: "Let All Mortal Flesh Keep Silence", instruments: [{ name: "Piano · Organ", file: "hymn-621.html" }], section: "The Lord's Supper", sungOn: [{date:"2026-11-29", name:"First Sunday in Advent (Ad Te Levavi)"}]},
       { number: 625, title: "Lord Jesus Christ, Life-Giving Bread", instruments: [{ name: "Piano · Organ", file: "hymn-625.html" }], section: "The Lord's Supper", sungOn: [{date:"2026-09-14", name:"Holy Cross"}, {date:"2026-09-20", name:"Sixteenth Sunday after Trinity"}, {date:"2026-09-27", name:"Seventeenth Sunday after Trinity"}]},
-      { number: 627, title: "Jesus Christ, Our Blessed Savior", instruments: [{ name: "Organ", file: "hymn-627.html" }], section: "The Lord's Supper", sungOn: [{date:"2026-11-15", name:"Twenty-sixth Sunday after Trinity"}, {date:"2026-11-29", name:"First Sunday in Advent (Ad Te Levavi)"}]},
+      { number: 627, title: "Jesus Christ, Our Blessed Savior", instruments: [{ name: "Organ", file: "hymn-627.html" }], section: "The Lord's Supper", sungOn: [{date:"2026-11-15", name:"Twenty-sixth Sunday after Trinity"}, {date:"2026-11-25", name:"Thanksgiving Day"}, {date:"2026-11-29", name:"First Sunday in Advent (Ad Te Levavi)"}]},
       { number: 628, title: "Your Table I Approach", instruments: [{ name: "Piano · Organ", file: "hymn-628.html" }], section: "The Lord's Supper", sungOn: [{date:"2026-09-20", name:"Sixteenth Sunday after Trinity"}]},
       { number: 636, title: "Soul, Adorn Yourself with Gladness", instruments: [{ name: "Piano", file: "hymn-636.html" }], section: "The Lord's Supper", sungOn: [{date:"2026-10-18", name:"Twentieth Sunday after Trinity"}, {date:"2026-11-22", name:"Last Sunday of the Church Year"}]},
       { number: 663, title: "Rise, My Soul, to Watch and Pray", instruments: [{ name: "Piano", file: "hymn-663.html" }], section: "The Church Militant", sungOn: [{date:"2026-11-22", name:"Last Sunday of the Church Year"}]},
@@ -608,7 +608,7 @@
         var last = list[list.length - 1];
         var p = String(last.date || "").split("-").map(Number);
         var d = new Date(p[0], (p[1] || 1) - 1, p[2] || 1);
-        return "Last sung " + MONTHS[d.getMonth()] + " " + d.getDate();
+        return MONTHS[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
       }
 
       function groupsOf(hymns) {
@@ -769,7 +769,7 @@
         var dayHits = searchQuery ? matchingDays(hymn, searchQuery) : [];
         if (dayHits.length) {
           dayHits.forEach(function (entry) {
-            addSpan(text, "day-match", "Sung on " + (entry.name || ""));
+            addSpan(text, "day-match", formatSung(entry));
           });
         } else {
           addSpan(text, "last-sung", lastSungLabel(hymn));
@@ -820,10 +820,6 @@
         if (sung.length) {
           var block = document.createElement("div");
           block.className = "sung";
-          var lab = document.createElement("span");
-          lab.className = "sung-label";
-          lab.textContent = "Sung on";
-          block.appendChild(lab);
           sung.forEach(function (entry) {
             var line = document.createElement("span");
             line.className = "sung-line";
