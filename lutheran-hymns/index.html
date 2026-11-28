@@ -475,41 +475,16 @@
     .chip[aria-pressed="true"] svg { fill: currentColor; }
     .chip:focus-visible, .filters select:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 
-    .sec-field {
-      flex: 1 1 100%;
-      width: 100%;
-      min-width: 100%;
-    }
-
     .filters select {
-      display: block;
-      width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
+      flex: 1 1 11rem;
+      min-width: 0;
       padding-right: 2.4rem;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%237b1e2b' stroke-width='1.8' d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 1rem center;
       background-size: 0.75rem;
-      white-space: normal;
-      overflow: visible;
-      text-overflow: clip;
+      text-overflow: ellipsis;
     }
-
-    .sec-label {
-      margin: 0.4rem 0 0;
-      color: var(--red);
-      font-family: var(--display);
-      font-weight: 600;
-      font-size: 1rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      line-height: 1.35;
-      overflow-wrap: break-word;
-      word-break: break-word;
-    }
-
-    .filters select.on ~ .sec-label { color: var(--red); }
 
     .filters select.on { background-color: var(--red); color: var(--parchment); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%23f3eadb' stroke-width='1.8' d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E"); }
     .filters option { color: var(--ink); background: #fbf6ec; text-transform: none; letter-spacing: 0; }
@@ -566,10 +541,7 @@
           <svg viewBox="0 0 20 28" aria-hidden="true"><path d="M3 1.5h14v24.5l-7-5.6-7 5.6z"/></svg>
           Favorites
         </button>
-        <div class="sec-field">
-          <select id="sec" aria-label="Filter by section"><option value="">All sections</option></select>
-          <p id="sec-label" class="sec-label">All sections</p>
-        </div>
+        <select id="sec" aria-label="Filter by section"><option value="">All sections</option></select>
       </div>
     </form>
     <p id="count" class="count" aria-live="polite"></p>
@@ -1040,8 +1012,15 @@
       })();
 
       function instrumentsOf(hymn) {
-        if (hymn.instruments && hymn.instruments.length) return hymn.instruments;
-        return hymn.file ? [{ name: "Piano", file: hymn.file }] : [];
+        var file = "";
+        if (hymn.instruments && hymn.instruments.length) file = hymn.instruments[0].file || "";
+        else if (hymn.file) file = hymn.file;
+        if (!file) return [];
+        var base = String(file).split("?")[0];
+        return [
+          { name: "Piano", file: base + "?inst=piano" },
+          { name: "Organ", file: base + "?inst=organ" }
+        ];
       }
 
       function hymnItem(hymn) {
@@ -1154,11 +1133,6 @@
         searchQuery = input.value.trim();
         var wantSec = secSel.value;
         secSel.classList.toggle("on", !!wantSec);
-        var secLab = document.getElementById("sec-label");
-        if (secLab) {
-          var opt = secSel.options[secSel.selectedIndex];
-          secLab.textContent = opt ? opt.textContent : "All sections";
-        }
         favBtn.setAttribute("aria-pressed", favOnly ? "true" : "false");
         var filtered = HYMNS.filter(function (hymn) {
           if (favOnly && !isFav(hymn.number)) return false;

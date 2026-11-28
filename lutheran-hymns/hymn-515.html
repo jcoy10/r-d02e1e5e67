@@ -367,7 +367,7 @@ That sets Your people free!</p>
 const SRC={"piano": "hymn-515-piano.mp3", "organ": "hymn-515-organ.mp3"};
 const NAMES={"piano": "Piano", "organ": "Organ"};
 const LIST=["piano","organ"];
-const LOOP_STARTS={"piano": 9.598, "organ": 9.6};
+const LOOP_STARTS={"piano": 9.599, "organ": 9.6};
 const LOOP_GAP=2.0;
 const INST_KEY="lutheran-hymns-inst";
 const a=document.getElementById('a'),ins=document.getElementById('ins'),sp=document.getElementById('sp'),info=document.getElementById('info'),lp=document.getElementById('lp');
@@ -408,7 +408,11 @@ a.addEventListener('pause',()=>{if(!jumping&&!a.ended)clearGap();});
 a.addEventListener('seeking',()=>{if(!jumping)clearGap();});
 a.addEventListener('ended',()=>{if(loopOn)startGap();});
 let start=LIST[0];
-try{const s=localStorage.getItem(INST_KEY); if(s&&SRC[s]) start=s;}catch(e){}
+try{
+  const q=new URLSearchParams(location.search).get('inst');
+  if(q&&SRC[q]) start=q;
+  else {const s=localStorage.getItem(INST_KEY); if(s&&SRC[s]) start=s;}
+}catch(e){}
 setInst(start,true);setRate(1.0);
 </script>
 </body>
