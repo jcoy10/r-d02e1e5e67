@@ -35,7 +35,7 @@
                 Pfarrbrief, oldest first: [{date:"YYYY-MM-DD", name:"..."}].
                 Use [] when there are no dates to show (Hymn 621 for now).
       Leave any field you do not have blank. Do not invent titles.
-      The page sorts by hymn number. Search matches number, title, section, and church days (sungOn names).
+      The page sorts by hymn number. Search matches number, title, section, dates (many formats), and church days.
     */
     const HYMNS = [
       { number: 331, title: "The Advent of Our King", instruments: [{ name: "Piano · Organ", file: "hymn-331.html" }], section: "Advent", sungOn: [{date:"2026-11-29", name:"First Sunday in Advent (Ad Te Levavi)"}]},
@@ -533,7 +533,7 @@
     <form id="find" class="find" role="search">
       <label for="q">Search</label>
       <div class="search-row">
-        <input id="q" type="search" placeholder="Number, title, section, or church day" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+        <input id="q" type="search" placeholder="Number, title, section, date, or church day" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
         <button type="button" id="clear" hidden>Clear</button>
       </div>
       <div class="filters">
@@ -649,6 +649,22 @@
         ["ninth", 9], ["eighth", 8], ["seventh", 7], ["sixth", 6],
         ["fifth", 5], ["fourth", 4], ["third", 3], ["second", 2], ["first", 1]
       ];
+      var ORDINAL_NAMES = {
+        1: "first", 2: "second", 3: "third", 4: "fourth", 5: "fifth",
+        6: "sixth", 7: "seventh", 8: "eighth", 9: "ninth", 10: "tenth",
+        11: "eleventh", 12: "twelfth", 13: "thirteenth", 14: "fourteenth",
+        15: "fifteenth", 16: "sixteenth", 17: "seventeenth", 18: "eighteenth",
+        19: "nineteenth", 20: "twentieth", 21: "twenty first", 22: "twenty second",
+        23: "twenty third", 24: "twenty fourth", 25: "twenty fifth",
+        26: "twenty sixth", 27: "twenty seventh", 28: "twenty eighth",
+        29: "twenty ninth", 30: "thirtieth", 31: "thirty first"
+      };
+      var MONTHS_FULL = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      var MONTHS_SEARCH = [
+        ["Jan"], ["Feb"], ["Mar"], ["Apr"], ["May"], ["Jun", "June"],
+        ["Jul", "July"], ["Aug"], ["Sep", "Sept"], ["Oct"], ["Nov"], ["Dec"]
+      ];
+      var WEEKDAYS_FULL = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
       function churchNorm(value) {
         var s = fold(value);
@@ -663,23 +679,279 @@
         return s.replace(/\s+/g, " ").trim();
       }
 
-      function basicBlob(hymn) {
-        return ["hymn " + hymn.number, hymn.number, hymn.title, hymn.line, hymn.section].map(fold).join(" ");
+      function nth(n) {
+        var r = n % 100;
+        if (r >= 11 && r <= 13) return n + "th";
+        switch (n % 10) {
+          case 1: return n + "st";
+          case 2: return n + "nd";
+          case 3: return n + "rd";
+          default: return n + "th";
+        }
+      }
+
+      function ordinalForms(n) {
+        var forms = [String(n), nth(n)];
+        var words = ORDINAL_NAMES[n];
+        if (words) {
+          forms.push(words);
+          if (words.indexOf(" ") !== -1) forms.push(words.replace(/ /g, "-"));
+        }
+        return forms;
+      }
+
+      function escapeRe(s) {
+        return String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      }
+
+      function hasWord(hay, word) {
+        var w = String(word || "").trim();
+        if (!w) return true;
+        return new RegExp("(^|\\s)" + escapeRe(w) + "(\\s|$)").test(hay);
+      }
+
+      function parseDateToken(tok) {
+        var s = String(tok || "").trim();
+        var iso = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+        if (iso) return { y: +iso[1], m: +iso[2], d: +iso[3] };
+        var usd = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2}|\d{4})$/);
+        if (usd) {
+          var y = +usd[3];
+          if (y < 100) y += 2000;
+          return { y: y, m: +usd[1], d: +usd[2] };
+        }
+        var md = s.match(/^(\d{1,2})[\/\-](\d{1,2})$/);
+        if (md) return { y: null, m: +md[1], d: +md[2] };
+        return null;
+      }
+
+      function dateFits(entryDate, parsed) {
+        var p = String(entryDate || "").split("-").map(Number);
+        if (p.length < 3 || !p[0]) return false;
+        if (parsed.y != null && parsed.y !== p[0]) return false;
+        if (parsed.m != null && parsed.m !== p[1]) return false;
+        if (parsed.d != null && parsed.d !== p[2]) return false;
+        return true;
+      }
+
+      var MONTH_NUM = {
+        january: 1, jan: 1, february: 2, feb: 2, march: 3, mar: 3, april: 4, apr: 4,
+        may: 5, june: 6, jun: 6, july: 7, jul: 7, august: 8, aug: 8,
+        september: 9, sept: 9, sep: 9, october: 10, oct: 10,
+        november: 11, nov: 11, december: 12, dec: 12
+      };
+
+      var MONTH_NAME_RE = "september|november|december|january|february|october|august|april|june|july|march|sept|nov|dec|jan|feb|oct|aug|apr|jun|jul|mar|may";
+
+      // Date-like tokens stay intact (11/29/26, 2026-11-29, Nov 29). Other text splits on punctuation.
+      function queryTokens(raw) {
+        var s = fold(String(raw || "")).trim();
+        if (!s) return [];
+        var marks = [];
+        function addMark(index, length, parsed) {
+          if (!parsed || parsed.m < 1 || parsed.m > 12 || parsed.d < 1 || parsed.d > 31) return;
+          marks.push({ index: index, length: length, parsed: parsed });
+        }
+        var reNum = /\b\d{1,4}[\/\-]\d{1,2}(?:[\/\-]\d{2,4})?\b/g;
+        var m;
+        while ((m = reNum.exec(s))) addMark(m.index, m[0].length, parseDateToken(m[0]));
+        var reMonDay = new RegExp("\\b(" + MONTH_NAME_RE + ")\\s+(\\d{1,2})(?:st|nd|rd|th)?(?:(?:\\s*,\\s*|\\s+)(\\d{4}))?", "g");
+        while ((m = reMonDay.exec(s))) {
+          addMark(m.index, m[0].length, { y: m[3] ? +m[3] : null, m: MONTH_NUM[m[1]], d: +m[2] });
+        }
+        var reDayMon = new RegExp("\\b(\\d{1,2})(?:st|nd|rd|th)?\\s+(" + MONTH_NAME_RE + ")(?:(?:\\s*,\\s*|\\s+)(\\d{4}))?", "g");
+        while ((m = reDayMon.exec(s))) {
+          addMark(m.index, m[0].length, { y: m[3] ? +m[3] : null, m: MONTH_NUM[m[2]], d: +m[1] });
+        }
+        marks.sort(function (a, b) { return a.index - b.index || b.length - a.length; });
+        var used = [];
+        marks.forEach(function (mark) {
+          var overlaps = used.some(function (u) {
+            return mark.index < u.index + u.length && mark.index + mark.length > u.index;
+          });
+          if (!overlaps) used.push(mark);
+        });
+        used.sort(function (a, b) { return a.index - b.index; });
+        var chunks = [];
+        var last = 0;
+        used.forEach(function (mark) {
+          if (mark.index > last) chunks.push({ kind: "text", v: s.slice(last, mark.index) });
+          chunks.push({ kind: "date", parsed: mark.parsed });
+          last = mark.index + mark.length;
+        });
+        if (last < s.length) chunks.push({ kind: "text", v: s.slice(last) });
+        var out = [];
+        chunks.forEach(function (chunk) {
+          if (chunk.kind === "date") out.push({ kind: "date", parsed: chunk.parsed });
+          else {
+            chunk.v.split(/[^a-z0-9]+/).forEach(function (w) {
+              var n = churchNorm(w);
+              if (n) out.push({ kind: "word", norm: n });
+            });
+          }
+        });
+        return out;
+      }
+
+      function seasonTerms(season) {
+        if (season === "Advent") return ["Advent"];
+        if (season === "Christmas") return ["Christmas"];
+        if (season === "Epiphany") return ["Epiphany"];
+        if (season === "Lent") return ["Lent"];
+        if (season === "Easter") return ["Easter"];
+        if (season === "Pentecost") return ["Pentecost", "Trinity", "Time of the Church"];
+        if (season === "End Times") return ["End Times", "End of the Church Year"];
+        if (season === "Thanksgiving") return ["Thanksgiving", "Harvest"];
+        return season ? [season] : [];
+      }
+
+      function churchDayTerms(name) {
+        var terms = [];
+        var raw = String(name || "").trim();
+        if (!raw) return terms;
+        terms.push(raw);
+        var base = raw.replace(/\([^)]*\)/g, " ").replace(/\s+/g, " ").trim();
+        raw.replace(/\(([^)]+)\)/g, function (_, inner) {
+          var special = inner.trim();
+          if (special) terms.push(special);
+          return "";
+        });
+        if (base && base !== raw) terms.push(base);
+
+        var lower = fold(base);
+        if (/last sunday of the church year/.test(lower)) {
+          terms.push("Last Sunday");
+          terms.push("Last Sunday of the Church Year");
+          terms.push("End of the Church Year");
+          terms = terms.concat(seasonTerms("End Times"));
+          return terms;
+        }
+        if (/thanksgiving/.test(lower)) {
+          terms.push("Thanksgiving");
+          terms.push("Thanksgiving Day");
+          terms = terms.concat(seasonTerms("Thanksgiving"));
+          return terms;
+        }
+
+        var norm = churchNorm(base);
+        var sunday = norm.match(/^(\d+) sunday (in|after|of) (.+)$/);
+        if (sunday) {
+          var n = +sunday[1];
+          var prep = sunday[2];
+          var rest = sunday[3];
+          var restTitle = base.replace(/^.*\b(?:sunday)\s+(?:in|after|of)\s+/i, "").trim();
+          ordinalForms(n).forEach(function (o) {
+            terms.push(o + " Sunday");
+            terms.push(o + " Sunday " + prep + " " + restTitle);
+          });
+          var restNorm = churchNorm(rest);
+          if (restNorm === "advent") {
+            ordinalForms(n).forEach(function (o) { terms.push("Advent " + o); });
+            terms = terms.concat(seasonTerms("Advent"));
+          } else if (restNorm === "trinity" || restNorm === "pentecost") {
+            var label = restNorm === "pentecost" ? "Pentecost" : "Trinity";
+            ordinalForms(n).forEach(function (o) { terms.push(label + " " + o); });
+            terms = terms.concat(seasonTerms("Pentecost"));
+          } else if (restNorm === "lent") {
+            ordinalForms(n).forEach(function (o) { terms.push("Lent " + o); });
+            terms = terms.concat(seasonTerms("Lent"));
+          } else if (restNorm === "easter" || restNorm === "easter sunday") {
+            terms = terms.concat(seasonTerms("Easter"));
+          } else if (restNorm === "christmas") {
+            terms = terms.concat(seasonTerms("Christmas"));
+          } else if (restNorm === "epiphany") {
+            terms = terms.concat(seasonTerms("Epiphany"));
+          }
+          return terms;
+        }
+
+        if (/holy cross/.test(lower)) {
+          terms.push("Holy Cross");
+          terms = terms.concat(seasonTerms("Pentecost"));
+          return terms;
+        }
+        if (/michael/.test(lower)) {
+          terms.push("Saint Michael and All Angels");
+          terms.push("Saint Michael");
+          terms.push("St. Michael");
+          terms.push("All Angels");
+          terms = terms.concat(seasonTerms("Pentecost"));
+          return terms;
+        }
+        return terms;
+      }
+
+      // Calendar words and church-day variants for one sung-on entry. Not shown on screen.
+      function entryTerms(entry) {
+        var terms = [];
+        var p = String(entry.date || "").split("-").map(Number);
+        if (p.length >= 3 && p[0]) {
+          var year = p[0], month = p[1], day = p[2];
+          var dt = new Date(year, month - 1, day);
+          var monAbbr = MONTHS[month - 1];
+          var monFull = MONTHS_FULL[month - 1];
+          terms.push(monAbbr + " " + day);
+          terms.push(monFull + " " + day);
+          terms.push(monAbbr);
+          terms.push(monFull);
+          (MONTHS_SEARCH[month - 1] || []).forEach(function (alias) { terms.push(alias); });
+          terms.push(String(day));
+          terms.push(nth(day));
+          terms.push(String(year));
+          terms.push(WEEKDAYS[dt.getDay()]);
+          terms.push(WEEKDAYS_FULL[dt.getDay()]);
+          terms.push(String(month));
+        }
+        terms = terms.concat(churchDayTerms(entry.name || ""));
+        return terms;
+      }
+
+      function entryHay(entry) {
+        return churchNorm(entryTerms(entry).join(" "));
+      }
+
+      function hymnHay(hymn) {
+        var terms = ["hymn " + hymn.number, String(hymn.number), hymn.title, hymn.line, hymn.section];
+        sungOf(hymn).forEach(function (entry) {
+          terms = terms.concat(entryTerms(entry));
+        });
+        return churchNorm(terms.join(" "));
+      }
+
+      function tokensMatchHay(tokens, hay, entryDate) {
+        for (var i = 0; i < tokens.length; i++) {
+          var tok = tokens[i];
+          if (tok.kind === "date") {
+            if (!entryDate || !dateFits(entryDate, tok.parsed)) return false;
+          } else if (!hasWord(hay, tok.norm)) {
+            return false;
+          }
+        }
+        return true;
       }
 
       function matchingDays(hymn, rawQuery) {
-        var q = churchNorm(rawQuery);
-        if (!q) return [];
+        var tokens = queryTokens(rawQuery);
+        if (!tokens.length) return [];
         return sungOf(hymn).filter(function (entry) {
-          return churchNorm(entry.name || "").indexOf(q) !== -1;
+          return tokensMatchHay(tokens, entryHay(entry), entry.date);
         });
       }
 
       function matches(hymn, rawQuery) {
-        var query = fold(String(rawQuery || "").trim());
-        if (!query) return true;
-        if (basicBlob(hymn).indexOf(query) !== -1) return true;
-        return matchingDays(hymn, rawQuery).length > 0;
+        var tokens = queryTokens(rawQuery);
+        if (!tokens.length) return true;
+        var hay = hymnHay(hymn);
+        for (var i = 0; i < tokens.length; i++) {
+          var tok = tokens[i];
+          if (tok.kind === "date") {
+            var hit = sungOf(hymn).some(function (entry) { return dateFits(entry.date, tok.parsed); });
+            if (!hit) return false;
+          } else if (!hasWord(hay, tok.norm)) {
+            return false;
+          }
+        }
+        return true;
       }
 
       function addSpan(parent, className, text) {
