@@ -431,7 +431,11 @@ a.addEventListener('pause',()=>{if(!jumping&&!a.ended)clearGap();});
 a.addEventListener('seeking',()=>{if(!jumping)clearGap();});
 a.addEventListener('ended',()=>{if(loopOn)startGap();});
 let start=LIST[0];
-try{const s=localStorage.getItem(INST_KEY); if(s&&SRC[s]) start=s;}catch(e){}
+try{
+  const q=new URLSearchParams(location.search).get('inst');
+  if(q&&SRC[q]) start=q;
+  else {const s=localStorage.getItem(INST_KEY); if(s&&SRC[s]) start=s;}
+}catch(e){}
 setInst(start,true);setRate(1.0);
 </script>
 </body>
