@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#7b1e2b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Lutheran Hymns">
+  <title>Hymn 895</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f3eadb'/%3E%3Cpath fill='%237b1e2b' d='M14 3h4v26h-4zM5 11h22v4H5z'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --parchment: #f3eadb;
+  --ink: #1c140f;
+  --red: #7b1e2b;
+  --red-deep: #5c1420;
+  --muted: #6d5b4e;
+  --rule: rgba(123, 30, 43, 0.85);
+  --hairline: rgba(70, 44, 28, 0.16);
+  --serif: "EB Garamond", "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+  --display: "Cormorant Garamond", "EB Garamond", "Iowan Old Style", Palatino, Georgia, serif;
+}
+* { box-sizing: border-box; }
+html { color-scheme: light; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.45;
+  background-color: var(--parchment);
+  background-image:
+    radial-gradient(ellipse 80% 40% at 50% -8%, rgba(255, 252, 245, 0.95), transparent 70%),
+    linear-gradient(180deg, rgba(123, 30, 43, 0.035), transparent 12rem);
+}
+.sheet {
+  width: min(40rem, 100%);
+  margin: 0 auto;
+  padding:
+    calc(1.5rem + env(safe-area-inset-top))
+    max(1.15rem, env(safe-area-inset-right))
+    calc(2.75rem + env(safe-area-inset-bottom))
+    max(1.15rem, env(safe-area-inset-left));
+}
+.back {
+  display: inline-block;
+  margin: 0 0 1.35rem;
+  color: var(--red);
+  font-family: var(--display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.back:hover, .back:focus-visible { text-decoration: underline; }
+.back:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+.mast { text-align: center; }
+.cross {
+  display: block;
+  width: 1.35rem;
+  height: 1.85rem;
+  margin: 0 auto 0.85rem;
+  color: var(--red);
+}
+.kicker {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--red-deep);
+}
+h1 {
+  margin: 0.4rem 0 0;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(2.2rem, 8vw, 3rem);
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+}
+.hymn-title {
+  margin: 0.7rem 0 0;
+  font-size: 1.35rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+.rules {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.28rem;
+  margin: 1.05rem auto 0;
+}
+.rules span { display: block; height: 1px; background: var(--rule); }
+.rules span:first-child { width: 7.25rem; }
+.rules span:last-child { width: 4.25rem; opacity: 0.55; }
+audio { width: 100%; margin: 1.35rem 0 0.6rem; }
+.row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0; }
+button {
+  font-family: var(--serif);
+  font-size: 1rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid rgba(123, 30, 43, 0.4);
+  border-radius: 8px;
+  background: rgba(251, 246, 236, 0.9);
+  color: var(--ink);
+  cursor: pointer;
+}
+button.on {
+  background: var(--red);
+  color: #f8f1e6;
+  border-color: var(--red);
+}
+#info {
+  margin: 0.85rem 0 0;
+  color: var(--muted);
+  font-style: italic;
+  font-size: 1rem;
+  min-height: 1.4rem;
+}
+.scripture {
+  margin-top: 2.4rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--rule);
+}
+.scripture h2 {
+  margin: 0 0 1.4rem;
+  font-family: var(--display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--red-deep);
+  text-align: center;
+}
+.passage { margin: 0 0 1.5rem; }
+.passage h3 {
+  margin: 0 0 0.45rem;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--red);
+  text-align: center;
+}
+.passage blockquote {
+  margin: 0;
+  font-size: 1.12rem;
+  line-height: 1.55;
+  font-style: italic;
+}
+.vn {
+  font-style: normal;
+  font-size: 0.72em;
+  font-weight: 600;
+  color: var(--red);
+  margin-right: 0.28em;
+  font-variant-numeric: lining-nums;
+  vertical-align: super;
+}
+.lord { font-variant: small-caps; letter-spacing: 0.06em; }
+.attr {
+  margin: 1.6rem 0 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.hymn-text {
+  margin-top: 2.4rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--rule);
+}
+.hymn-text h2 {
+  margin: 0 0 1.4rem;
+  font-family: var(--display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--red-deep);
+  text-align: center;
+}
+.stanza {
+  margin: 0 auto 1.55rem;
+  max-width: 28rem;
+}
+.stanza .sn {
+  display: block;
+  margin: 0 0 0.35rem;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--red);
+  text-align: center;
+  font-variant-numeric: lining-nums;
+}
+.stanza p {
+  margin: 0;
+  font-size: 1.14rem;
+  line-height: 1.5;
+  text-align: center;
+  text-wrap: pretty;
+}
+.text-note {
+  margin: 1.4rem 0 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.hymn-text + .scripture { margin-top: 1.6rem; }
+@media (min-width: 720px) {
+  body { padding: 2.25rem 1.25rem; }
+  .sheet {
+    padding: 2.4rem 2.4rem 3rem;
+    background: rgba(251, 246, 236, 0.45);
+    border: 1px solid rgba(90, 55, 30, 0.14);
+    box-shadow: 0 18px 50px rgba(60, 30, 12, 0.05);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto; }
+}
+.hymn-section {
+  margin: 0.45rem 0 0;
+  font-family: var(--display);
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+  
+.sung-on {
+  margin: 1.05rem 0 0;
+  text-align: center;
+}
+.sung-on h2 {
+  margin: 0 0 0.4rem;
+  font-family: var(--display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--red-deep);
+}
+.sung-on ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sung-on li {
+  margin: 0.22rem 0 0;
+  font-size: 1.02rem;
+  line-height: 1.35;
+}
+.sung-on time { font-variant-numeric: lining-nums; }
+</style>
+</head>
+<body>
+  <div class="sheet">
+    <a class="back" href="./index.html">All hymns</a>
+    <header class="mast">
+      <svg class="cross" viewBox="0 0 48 68" aria-hidden="true">
+        <path d="M24 2v64M6 20h36" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"/>
+      </svg>
+      <p class="kicker">Lutheran Hymns</p>
+      <h1>Hymn 895</h1>
+      <p class="hymn-title">Now Thank We All Our God</p>
+      <p class="hymn-section" style="color:#9a5b0c">Harvest and Thanksgiving</p>
+      <section class="sung-on" aria-label="Dates">
+        <ul>
+                <li><time datetime="2026-11-25">Wed, Nov 25, 2026</time> · Thanksgiving Day</li>
+        </ul>
+      </section>
+      <div class="rules" aria-hidden="true"><span></span><span></span></div>
+    </header>
+    <audio id="a" controls preload="auto"></audio>
+    <div class="row" id="ins"></div>
+    <div class="row" id="sp"></div>
+    <div class="row"><button id="lp" aria-pressed="false">Loop: off</button></div>
+    <p id="info"></p>
+    <section class="hymn-text" aria-labelledby="text-heading">
+<h2 id="text-heading">Text</h2>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 1">1</span>
+<p>Now thank we all our God<br>
+With hearts and hands and voices,<br>
+Who wondrous things has done,<br>
+In whom His world rejoices;<br>
+Who from our mothers’ arms<br>
+Has blest us on our way<br>
+With countless gifts of love<br>
+And still is ours today.</p>
+</article>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 2">2</span>
+<p>Oh, may this bounteous God<br>
+Through all our life be near us,<br>
+With ever joyful hearts<br>
+And blessed peace to cheer us<br>
+And keep us in His grace<br>
+And guide us when perplexed<br>
+And free us from all ills<br>
+In this world and the next!</p>
+</article>
+<article class="stanza">
+<span class="sn" aria-label="Stanza 3">3</span>
+<p>All praise and thanks to God<br>
+The Father now be given,<br>
+The Son, and Him who reigns<br>
+With them in highest heaven,<br>
+The one eternal God,<br>
+Whom earth and heav’n adore;<br>
+For thus it was, is now,<br>
+And shall be evermore.</p>
+</article>
+</section>
+    <section class="scripture" aria-labelledby="scripture-heading">
+<h2 id="scripture-heading">Scripture</h2>
+<article class="passage">
+<h3>Psalm 107:21–22</h3>
+<blockquote>
+<span class="vn">21</span>Let them thank the <span class="lord">Lord</span> for his steadfast love, for his wondrous works to the children of man! <span class="vn">22</span>And let them offer sacrifices of thanksgiving, and tell of his deeds in songs of joy!
+</blockquote></article>
+<article class="passage">
+<h3>Ephesians 5:19</h3>
+<blockquote>
+<span class="vn">19</span>addressing one another in psalms and hymns and spiritual songs, singing and making melody to the Lord with your heart,
+</blockquote></article>
+<article class="passage">
+<h3>Psalm 105:1–2</h3>
+<blockquote>
+<span class="vn">1</span>Oh give thanks to the <span class="lord">Lord</span>; call upon his name; make known his deeds among the peoples! <span class="vn">2</span>Sing to him, sing praises to him; tell of all his wondrous works!
+</blockquote></article>
+<article class="passage">
+<h3>Psalm 37:5–6</h3>
+<blockquote>
+<span class="vn">5</span>Commit your way to the <span class="lord">Lord</span>; trust in him, and he will act. <span class="vn">6</span>He will bring forth your righteousness as the light, and your justice as the noonday.
+</blockquote></article>
+<article class="passage">
+<h3>Psalm 37:39–40</h3>
+<blockquote>
+<span class="vn">39</span>The salvation of the righteous is from the <span class="lord">Lord</span>; he is their stronghold in the time of trouble. <span class="vn">40</span>The <span class="lord">Lord</span> helps them and delivers them; he delivers them from the wicked and saves them, because they take refuge in him.
+</blockquote></article>
+<p class="attr">Scripture quotations are from the ESV® Bible (The Holy Bible, English Standard Version®), © Crossway. Used by permission. All rights reserved.</p>
+</section>
+
+  </div>
+<script>
+const SRC={"piano": "hymn-895-piano.mp3", "organ": "hymn-895-organ.mp3"};
+const NAMES={"piano": "Piano", "organ": "Organ"};
+const LIST=["piano","organ"];
+const LOOP_STARTS={"piano": 9.599, "organ": 9.6};
+const LOOP_GAP=2.0;
+const INST_KEY="lutheran-hymns-inst";
+const a=document.getElementById('a'),ins=document.getElementById('ins'),sp=document.getElementById('sp'),info=document.getElementById('info'),lp=document.getElementById('lp');
+let inst=null,rate=1.0,loopOn=false,jumping=false,gapTimer=null;
+function pp(){a.preservesPitch=true;a.mozPreservesPitch=true;a.webkitPreservesPitch=true;}
+function label(){info.textContent='Instrument: '+NAMES[inst]+' · Speed '+rate.toFixed(1)+'x · quarter = '+Math.round(100*rate)+' · Loop '+(loopOn?'on':'off');
+[...ins.children].forEach(b=>b.classList.toggle('on',b.dataset.i===inst));
+[...sp.children].forEach(b=>b.classList.toggle('on',+b.dataset.r===rate));
+lp.classList.toggle('on',loopOn);lp.textContent='Loop: '+(loopOn?'on':'off');lp.setAttribute('aria-pressed',String(loopOn));}
+function setRate(r){rate=r;pp();a.defaultPlaybackRate=r;a.playbackRate=r;label();}
+function clearGap(){if(gapTimer!=null){clearTimeout(gapTimer);gapTimer=null;}}
+function setInst(i,first){if(i===inst&&!first)return;
+ const t=a.currentTime||0,playing=!a.paused&&!a.ended;inst=i;
+ try{localStorage.setItem(INST_KEY,i);}catch(e){}
+ clearGap();
+ a.src=SRC[i];pp();a.loop=false;
+ a.addEventListener('loadedmetadata',function h(){a.removeEventListener('loadedmetadata',h);
+  try{a.currentTime=Math.min(t,(a.duration||t)-0.05);}catch(e){}
+  a.defaultPlaybackRate=rate;a.playbackRate=rate;pp();a.loop=false;if(playing)a.play().catch(()=>{});});
+ a.load();label();}
+function setLoop(on){loopOn=on;a.loop=false;label();if(!on)clearGap();}
+function goLoop(){
+ if(jumping)return;jumping=true;
+ clearGap();
+ a.currentTime=LOOP_STARTS[inst];a.playbackRate=rate;pp();
+ if(a.paused||a.ended)a.play().catch(()=>{});
+ setTimeout(()=>{jumping=false},40);
+}
+function startGap(){
+ if(jumping||gapTimer!=null||!loopOn)return;
+ gapTimer=setTimeout(function(){gapTimer=null;if(loopOn)goLoop();},LOOP_GAP*1000);
+}
+LIST.forEach(i=>{const b=document.createElement('button');b.textContent=NAMES[i];b.dataset.i=i;b.onclick=()=>setInst(i);ins.appendChild(b)});
+[1.0,1.1,1.2,1.3,1.4,1.5].forEach(r=>{const b=document.createElement('button');b.textContent=r.toFixed(1)+'x';b.dataset.r=r;b.onclick=()=>setRate(r);sp.appendChild(b)});
+lp.onclick=()=>setLoop(!loopOn);
+a.addEventListener('play',()=>{a.playbackRate=rate;pp();a.loop=false;if(!jumping)clearGap();});
+a.addEventListener('pause',()=>{if(!jumping&&!a.ended)clearGap();});
+a.addEventListener('seeking',()=>{if(!jumping)clearGap();});
+a.addEventListener('ended',()=>{if(loopOn)startGap();});
+let start=LIST[0];
+try{const s=localStorage.getItem(INST_KEY); if(s&&SRC[s]) start=s;}catch(e){}
+setInst(start,true);setRate(1.0);
+</script>
+</body>
+</html>
